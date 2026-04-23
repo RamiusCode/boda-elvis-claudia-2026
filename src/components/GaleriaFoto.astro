@@ -1,0 +1,151 @@
+---
+// GaleriaFoto.astro
+---
+
+<section class="relative w-full py-10 px-6" id="seccion-galeria">
+
+    <!-- TÍTULO -->
+    <div class="max-w-md mx-auto text-center mb-10 opacity-0" id="galeria-titulo">
+        <div class="flex items-center justify-center gap-3 mb-4">
+            <div class="h-px w-16 bg-[#4a6fa5]/40"></div>
+            <span class="text-[#4a6fa5] text-base">✦</span>
+            <div class="h-px w-16 bg-[#4a6fa5]/40"></div>
+        </div>
+        <h3 class="text-[#4a6fa5] tracking-[0.2em] uppercase text-xl md:text-2xl font-semibold mb-2">
+            Nuestra Foto
+        </h3>
+        <p class="font-charm text-[#122a4d] text-2xl md:text-3xl">
+            Un momento para siempre
+        </p>
+        <div class="flex items-center justify-center gap-3 mt-4">
+            <div class="h-px w-16 bg-[#4a6fa5]/40"></div>
+            <span class="text-[#4a6fa5] text-base">✦</span>
+            <div class="h-px w-16 bg-[#4a6fa5]/40"></div>
+        </div>
+    </div>
+
+    <!-- FOTO ÚNICA -->
+    <div class="max-w-sm mx-auto relative" id="foto-contenedor">
+
+        <!-- Esquinas decorativas exteriores -->
+        <div class="absolute -inset-5 pointer-events-none z-0">
+            <div class="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-[#4a6fa5]/40 rounded-tl-3xl"></div>
+            <div class="absolute top-0 right-0 w-10 h-10 border-t-2 border-r-2 border-[#4a6fa5]/40 rounded-tr-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-10 h-10 border-b-2 border-l-2 border-[#4a6fa5]/40 rounded-bl-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 border-[#4a6fa5]/40 rounded-br-3xl"></div>
+        </div>
+
+        <!-- Marco principal -->
+        <div
+            id="foto-marco"
+            class="relative rounded-3xl overflow-hidden shadow-2xl opacity-0"
+            style="aspect-ratio: 3/4;"
+        >
+            <!-- Foto -->
+            <img
+                id="foto-principal"
+                src="/imagenes/foto1.png"
+                alt="Elvis y Claudia"
+                class="w-full h-full object-cover"
+                style="transform-origin: center center;"
+            />
+
+            <!-- Overlay de textura sutil -->
+            <div
+                class="absolute inset-0 pointer-events-none"
+                style="background: linear-gradient(135deg, rgba(18,42,77,0.05) 0%, transparent 50%, rgba(18,42,77,0.05) 100%);"
+            ></div>
+
+            <!-- Gradiente inferior -->
+            <div
+                class="absolute bottom-0 left-0 right-0 pointer-events-none"
+                style="height: 45%; background: linear-gradient(to top, rgba(12,28,60,0.82) 0%, rgba(12,28,60,0.4) 60%, transparent 100%);"
+            ></div>
+
+            <!-- Nombres y fecha sobre el gradiente -->
+            <div class="absolute bottom-0 left-0 right-0 text-center pb-7 px-4 z-10" id="foto-texto">
+                <p class="font-great-vibes text-white text-4xl leading-none drop-shadow-lg">
+                    Elvis &amp; Claudia
+                </p>
+                <div class="flex items-center justify-center gap-2 mt-2">
+                    <div class="h-px w-8 bg-white/40"></div>
+                    <p class="font-crimson text-white/75 text-xs tracking-[0.25em] uppercase">
+                        09 · Mayo · 2026
+                    </p>
+                    <div class="h-px w-8 bg-white/40"></div>
+                </div>
+            </div>
+
+            <!-- Esquinas interiores decorativas (sobre la foto) -->
+            <div class="absolute inset-0 pointer-events-none z-20">
+                <div class="absolute top-4 left-4 w-7 h-7 border-t border-l border-white/30 rounded-tl-xl"></div>
+                <div class="absolute top-4 right-4 w-7 h-7 border-t border-r border-white/30 rounded-tr-xl"></div>
+            </div>
+        </div>
+
+        <!-- Crédito inferior -->
+        <div class="flex items-center justify-center gap-4 mt-6 opacity-0" id="credito-foto">
+            <div style="height:1px; flex:1; background: linear-gradient(to right, transparent, rgba(74,111,165,0.5));"></div>
+            <span class="text-[#4a6fa5]/60 text-xs tracking-[0.3em] uppercase font-charm">Elvis &amp; Claudia</span>
+            <div style="height:1px; flex:1; background: linear-gradient(to left, transparent, rgba(74,111,165,0.5));"></div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.set("#galeria-titulo", { opacity: 0, y: 24 });
+            gsap.set("#foto-marco", { opacity: 0, scale: 0.94, y: 30 });
+            gsap.set("#credito-foto", { opacity: 0 });
+
+            ScrollTrigger.create({
+                trigger: "#seccion-galeria",
+                start: "top 85%",
+                onEnter: () => {
+                    const tl = gsap.timeline();
+                    tl.to("#galeria-titulo", {
+                        opacity: 1, y: 0, duration: 1, ease: "power3.out",
+                    })
+                    .to("#foto-marco", {
+                        opacity: 1, scale: 1, y: 0, duration: 1.3, ease: "power3.out",
+                    }, "-=0.5")
+                    .to("#credito-foto", {
+                        opacity: 1, duration: 0.7,
+                    }, "-=0.3");
+
+                    // Ken Burns suave e infinito
+                    gsap.to("#foto-principal", {
+                        scale: 1.07,
+                        x: "-1.5%",
+                        y: "-1.5%",
+                        duration: 9,
+                        ease: "sine.inOut",
+                        yoyo: true,
+                        repeat: -1,
+                        delay: 1.2,
+                    });
+                },
+                onLeaveBack: () => {
+                    gsap.set("#galeria-titulo", { opacity: 0, y: 24 });
+                    gsap.set("#foto-marco", { opacity: 0, scale: 0.94, y: 30 });
+                    gsap.set("#credito-foto", { opacity: 0 });
+                },
+            });
+        });
+    }
+</script>
+
+<style>
+    #foto-marco {
+        filter: drop-shadow(0 24px 48px rgba(18, 42, 77, 0.28));
+    }
+    #foto-principal {
+        will-change: transform;
+    }
+</style>
